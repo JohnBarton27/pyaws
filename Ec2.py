@@ -29,9 +29,42 @@ def getallinstancenames():
     allinstancenames = []
 
     for instance in allinstances:
-        tags = instance["Tags"]
-        for tag in tags:
-            if tag["Key"] == "Name":
-                allinstancenames.append(tag["Value"])
+        allinstancenames.append(getinstancename(instance))
 
     return allinstancenames
+
+
+def getallinstancestatuses():
+    """Gets the status of all ec2 instances"""
+    allinstances = getallinstances()
+
+    allinstancestatuses = {}
+
+    for instance in allinstances:
+        name = getinstancename(instance)
+        state = getinstancestate(instance)
+        allinstancestatuses[name] = state
+
+    return allinstancestatuses
+
+
+def getinstancename(instance):
+    """Given a JSON instance, get the name"""
+    tags = instance["Tags"]
+    for tag in tags:
+        if tag["Key"] == "Name":
+            return tag["Value"]
+
+
+def getinstancestate(instance):
+    """Given a JSON instance, get its state"""
+    return instance["State"]["Name"]
+
+
+def getinstancestatusbyname(name):
+    """Gets the state of an instance, given its name"""
+    allstatuses = getallinstancestatuses()
+    if name in allstatuses:
+        return allstatuses[name]
+    else:
+        return "'" + name + "' is not the name of an EC2 instance you currently have access to!"
