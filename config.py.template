@@ -1,5 +1,7 @@
 # Configuration template for pyaws
 
-accessKey = ""
-secretKey = ""
-defaultRegion = ""
+accesskey = ""
+secretkey = ""
+defaultregion = ""
+
+profilename = ""
