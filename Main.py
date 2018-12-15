@@ -2,6 +2,9 @@
 
 import config
 import Configure
+import Utils
+import Ec2
+import MenuTemplates
 
 
 def startmenu():
@@ -11,7 +14,10 @@ def startmenu():
     print("Checking 'credentials' file based on your config.py...")
     Configure.createcredentialsfile(config.accesskey, config.secretkey)
 
-    command = "aws configure --profile " + config.profilename
+    selection = input(MenuTemplates.getmenu(MenuTemplates.mainmenu))
+    print(selection)
+
+    Utils.printjson(Ec2.getallinstancenames())
 
 
 if __name__ == '__main__':

@@ -20,7 +20,7 @@ def createcredentialsfile(accesskey, secretkey):
 
     f = open(filename, "a+")
 
-    f.write(config.profilename + "\n")
+    f.write("[" + config.profilename + "]" + "\n")
     f.write("aws_access_key_id = " + accesskey + "\n")
     f.write("aws_secret_access_key = " + secretkey)
     f.close()
@@ -42,6 +42,6 @@ def createconfigfile(region):
 
     f = open(filename, "a+")
 
-    f.write(config.profilename + "\n")
+    f.write("[profile " + config.profilename + "]" + "\n")
     f.write("region = " + region)
     f.close()

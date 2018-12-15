@@ -5,3 +5,5 @@ secretkey = ""
 defaultregion = ""
 
 profilename = ""
+
+awsexe = ""
