@@ -30,7 +30,14 @@ def startmenu(menu):
                 print()
                 Utils.printjson(result)
 
-            if "menu" in action:
+                if "menu" in action:
+                    if action["menu"] == "self":
+                        startmenu(menu)
+                    elif action["menu"] == "main":
+                        startmenu(mainmenu)
+                    else:
+                        startmenu(action["menu"])
+            elif "menu" in action:
                 if action["menu"] == "self":
                     startmenu(menu)
                 elif action["menu"] == "main":
@@ -42,7 +49,7 @@ def startmenu(menu):
             startmenu(menu)
 
     except ValueError:
-        print("\nInvalid option! Try again.")
+        print("\nInvalid option! Try again. (ValueError)")
         startmenu(menu)
 
 
@@ -66,7 +73,27 @@ indec2menu = {
                 "menu": "self"
             }
         },
-        2: returnToMain
+        2: {
+            "value": "Start an EC2 instance",
+            "action": {
+                "function": Ec2.startinstancebyname,
+                "parameters": [
+                    {"prompt": "Instance Name: "}
+                ]
+            },
+            "menu": "self"
+        },
+        3: {
+            "value": "Stop an EC2 instance",
+            "action": {
+                "function": Ec2.stopinstancebyname,
+                "parameters": [
+                    {"prompt": "Instance Name: "}
+                ]
+            },
+            "menu": "self"
+        },
+        4: returnToMain
     }
 }
 

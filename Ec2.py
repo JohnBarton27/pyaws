@@ -2,7 +2,17 @@
 import config
 import subprocess
 import json
-import Utils
+
+
+def getinstancejson(name):
+    """Given the name of an instance, get its JSON representation"""
+    allinstances = getallinstances()
+
+    for instance in allinstances:
+        if getinstancename(instance) == name:
+            return instance
+
+    raise Exception("Could not find instance with name '" + name + "'!")
 
 
 def getallinstances():
@@ -48,6 +58,11 @@ def getallinstancestatuses():
     return allinstancestatuses
 
 
+def getinstanceid(instance):
+    """Given a JSON instance, get the instance ID"""
+    return instance["InstanceId"]
+
+
 def getinstancename(instance):
     """Given a JSON instance, get the name"""
     tags = instance["Tags"]
@@ -68,3 +83,34 @@ def getinstancestatusbyname(name):
         return allstatuses[name]
     else:
         return "'" + name + "' is not the name of an EC2 instance you currently have access to!"
+
+
+def startinstance(instance):
+    """Starts an instance, given the JSON of the instance"""
+    instanceid = getinstanceid(instance)
+    command = config.awsexe + " ec2 start-instances --instance-ids " + instanceid + " --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    return out
+
+
+def startinstancebyname(name):
+    """Starts an EC2 instance, given its name"""
+    instance = getinstancejson(name)
+    return startinstance(instance)
+
+
+def stopinstance(instance):
+    """Stops an instance, given the JSON of the instance"""
+    instanceid = getinstanceid(instance)
+    command = config.awsexe + " ec2 stop-instances --instance-ids " + instanceid + " --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    return out
+
+
+def stopinstancebyname(name):
+    """Stops an EC2 instance, given its name"""
+    instance = getinstancejson(name)
+    return stopinstance(instance)
+
