@@ -27,8 +27,10 @@ def startmenu(menu):
                         params.append(input(param["prompt"]))
 
                 result = action["function"](*params)
-                print()
-                Utils.printjson(result)
+
+                if result:
+                    print()
+                    Utils.printjson(result)
 
                 if "menu" in action:
                     if action["menu"] == "self":
@@ -66,7 +68,7 @@ indec2menu = {
         1: {
             "value": "Get the status of an EC2 instance",
             "action": {
-                "function": Ec2.getinstancestatusbyname,
+                "function": Ec2.getinstancestatebyname,
                 "parameters": [
                     {"prompt": "Instance Name: "}
                 ],
@@ -101,26 +103,12 @@ ec2menu = {
     "header": "\n==== EC2 ====",
     "options": {
         1: {
-            "value": "Get the names of all EC2 instances",
-            "action": {
-                "function": Ec2.getallinstancenames,
-                "menu": "self"
-            }
-        },
-        2: {
-            "value": "Get the status of all EC2 instances",
-            "action": {
-                "function": Ec2.getallinstancestatuses,
-                "menu": "self"
-            }
-        },
-        3: {
             "value": "Individual EC2 instance operations",
             "action": {
                 "menu": indec2menu
             }
         },
-        4: returnToMain
+        2: returnToMain
     }
 }
 
@@ -131,6 +119,7 @@ mainmenu = {
         1: {
             "value": "EC2",
             "action": {
+                "function": Ec2.displaydashboard,
                 "menu": ec2menu
             }
         },

@@ -44,7 +44,7 @@ def getallinstancenames():
     return allinstancenames
 
 
-def getallinstancestatuses():
+def getallinstancestates():
     """Gets the status of all ec2 instances"""
     allinstances = getallinstances()
 
@@ -76,11 +76,11 @@ def getinstancestate(instance):
     return instance["State"]["Name"]
 
 
-def getinstancestatusbyname(name):
+def getinstancestatebyname(name):
     """Gets the state of an instance, given its name"""
-    allstatuses = getallinstancestatuses()
-    if name in allstatuses:
-        return allstatuses[name]
+    allstates = getallinstancestates()
+    if name in allstates:
+        return allstates[name]
     else:
         return "'" + name + "' is not the name of an EC2 instance you currently have access to!"
 
@@ -113,4 +113,57 @@ def stopinstancebyname(name):
     """Stops an EC2 instance, given its name"""
     instance = getinstancejson(name)
     return stopinstance(instance)
+
+
+def displaydashboard():
+    """Display a dashboard with all EC2 information"""
+    allinstances = getallinstances()
+
+    names = []
+    states = []
+
+    # Populate column data
+    for instance in allinstances:
+        names.append(getinstancename(instance))
+        states.append(getinstancestate(instance))
+
+    # Name
+    namescol = createdashcol("Name", names, leftborder=True)
+
+    # States
+    statescol = createdashcol("State", states)
+
+    for x in range(0, len(namescol)):
+        print(namescol[x] + statescol[x])
+
+
+def createdashcol(title, data, leftborder=False):
+    """Create a data for the dashboard"""
+    rows = []
+    maxdatalen = len(max(data, key=len))
+
+    # Header
+    rows.append(pad(title, maxdatalen, leftborder=leftborder))
+
+    # Header line
+    rows.append(pad("", maxdatalen, padchar="-", leftborder=leftborder))
+
+    # Data
+    for dataval in data:
+        rows.append(pad(dataval, maxdatalen, leftborder=leftborder))
+
+    return rows
+
+
+def pad(content, maxlength, padchar=" ", leftborder=False):
+    """Pad a cell for dashboard display"""
+    if leftborder:
+        data = "|"
+    else:
+        data = ""
+    data += content
+    spacesneeded = maxlength - len(content)
+    for x in range(0, spacesneeded):
+        data += padchar
+    return data + "|"
 
