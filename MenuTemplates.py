@@ -103,12 +103,19 @@ ec2menu = {
     "header": "\n==== EC2 ====",
     "options": {
         1: {
+            "value": "Refresh dashboard",
+            "action": {
+                "function": Ec2.displaydashboard,
+                "menu": "self"
+            }
+        },
+        2: {
             "value": "Individual EC2 instance operations",
             "action": {
                 "menu": indec2menu
             }
         },
-        2: returnToMain
+        3: returnToMain
     }
 }
 
