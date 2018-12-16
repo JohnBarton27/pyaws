@@ -76,6 +76,14 @@ def getinstancestate(instance):
     return instance["State"]["Name"]
 
 
+def getinstancepublicip(instance):
+    """Given a JSON instance, get its public IP address"""
+    if "PublicIpAddress" in instance:
+        return instance["PublicIpAddress"]
+    else:
+        return ""
+
+
 def getinstancestatebyname(name):
     """Gets the state of an instance, given its name"""
     allstates = getallinstancestates()
@@ -121,11 +129,13 @@ def displaydashboard():
 
     names = []
     states = []
+    ipaddresses = []
 
     # Populate column data
     for instance in allinstances:
         names.append(getinstancename(instance))
         states.append(getinstancestate(instance))
+        ipaddresses.append(getinstancepublicip(instance))
 
     # Name
     namescol = createdashcol("Name", names, leftborder=True)
@@ -133,8 +143,11 @@ def displaydashboard():
     # States
     statescol = createdashcol("State", states)
 
+    # IP Addresses
+    ipadressescol = createdashcol("IP Address", ipaddresses)
+
     for x in range(0, len(namescol)):
-        print(namescol[x] + statescol[x])
+        print(namescol[x] + statescol[x] + ipadressescol[x])
 
 
 def createdashcol(title, data, leftborder=False):
