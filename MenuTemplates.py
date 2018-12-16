@@ -81,9 +81,9 @@ indec2menu = {
                 "function": Ec2.startinstancebyname,
                 "parameters": [
                     {"prompt": "Instance Name: "}
-                ]
+                ],
+                "menu": "self"
             },
-            "menu": "self"
         },
         3: {
             "value": "Stop an EC2 instance",
@@ -91,9 +91,9 @@ indec2menu = {
                 "function": Ec2.stopinstancebyname,
                 "parameters": [
                     {"prompt": "Instance Name: "}
-                ]
+                ],
+                "menu": "self"
             },
-            "menu": "self"
         },
         4: returnToMain
     }
