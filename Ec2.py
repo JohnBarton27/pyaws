@@ -175,6 +175,21 @@ def createip():
     return out
 
 
+def associateip(ip, instance):
+    """Associates the given Elastic IP Address with the given EC2 Instance"""
+    if type(ip) is str:
+        ip = getipjson(ip)
+
+    if type(instance) is str:
+        instance = getinstancejson(instance)
+
+    command = config.awsexe + " ec2 associate-address --allocation-id " + getelasticallocationid(ip) + " --instance-id " + getinstanceid(instance) + " --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+
+    print(err.decode("utf-8"))
+
+
 def releaseip(ip):
     """Destroys the elastic ip address specified"""
     ip = getipjson(ip)

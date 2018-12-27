@@ -126,7 +126,18 @@ elasticipmenu = {
                 "menu": "self"
             }
         },
-        4: returnToMain
+        4: {
+            "value": "Associate an Elastic IP Address",
+            "action": {
+                "function": Ec2.associateip,
+                "parameters": [
+                    {"prompt": "Public IP Address to associate: "},
+                    {"prompt": "Instance to associate with: "}
+                ],
+                "menu": "self"
+            }
+        },
+        5: returnToMain
     }
 }
 
