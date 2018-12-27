@@ -99,6 +99,37 @@ indec2menu = {
     }
 }
 
+elasticipmenu = {
+    "header": "\n==== ElastiC IP ====",
+    "options": {
+        1: {
+            "value": "Refresh dashboard",
+            "action": {
+                "function": Ec2.displayelasticdashboard,
+                "menu": "self"
+            }
+        },
+        2: {
+            "value": "Create new Elastic IP Address",
+            "action": {
+                "function": Ec2.createip,
+                "menu": "self"
+            }
+        },
+        3: {
+            "value": "Release an Elastic IP Address",
+            "action": {
+                "function": Ec2.releaseip,
+                "parameters": [
+                    {"prompt": "Public IP Address to release: "}
+                ],
+                "menu": "self"
+            }
+        },
+        4: returnToMain
+    }
+}
+
 ec2menu = {
     "header": "\n==== EC2 ====",
     "options": {
@@ -115,7 +146,14 @@ ec2menu = {
                 "menu": indec2menu
             }
         },
-        3: returnToMain
+        3: {
+            "value": "Elastic IP operations",
+            "action": {
+                "function": Ec2.displayelasticdashboard,
+                "menu": elasticipmenu
+            }
+        },
+        4: returnToMain
     }
 }
 

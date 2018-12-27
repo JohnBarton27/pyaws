@@ -5,11 +5,14 @@ import json
 
 
 def getinstancejson(name):
-    """Given the name of an instance, get its JSON representation"""
+    """Given the name (or ID) of an instance, get its JSON representation"""
     allinstances = getallinstances()
 
     for instance in allinstances:
         if getinstancename(instance) == name:
+            return instance
+
+        if getinstanceid(instance) == name:
             return instance
 
     raise Exception("Could not find instance with name '" + name + "'!")
@@ -121,6 +124,95 @@ def stopinstancebyname(name):
     """Stops an EC2 instance, given its name"""
     instance = getinstancejson(name)
     return stopinstance(instance)
+
+
+def getallelasticips():
+    """Gets all elastic IP addresses associated with your account"""
+    command = config.awsexe + " ec2 describe-addresses --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    addresses = json.loads(out)
+    return addresses["Addresses"]
+
+
+def getipjson(ip):
+    if type(ip) is dict:
+        return ip
+    allips = getallelasticips()
+
+    for allip in allips:
+        if ip == getelasticpublicip(allip):
+            return allip
+
+
+def getassociatedinstance(ip):
+    """Gets the InstanceId of the Elastic IP Address"""
+    if "InstanceId" in ip:
+        return getinstancejson(ip["InstanceId"])
+    else:
+        return ""
+
+
+def getelasticallocationid(ip):
+    """Gets the AllocationId of the given Elastic IP Address"""
+    ip = getipjson(ip)
+    return ip["AllocationId"]
+
+
+def getelasticpublicip(ip):
+    """Gets the PublicIp address of the Elastic IP Address"""
+    return ip["PublicIp"]
+
+
+def createip():
+    """Create a new elastic IP address"""
+    command = config.awsexe + " ec2 allocate-address --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+
+    print(err.decode("utf-8"))
+
+    return out
+
+
+def releaseip(ip):
+    """Destroys the elastic ip address specified"""
+    ip = getipjson(ip)
+
+    command = config.awsexe + " ec2 release-address --allocation-id " + getelasticallocationid(ip) + " --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+
+    print(err.decode("utf-8"))
+
+    return out
+
+
+def displayelasticdashboard():
+    """Display a dashboard with info on the Elastic IPs"""
+    allips = getallelasticips()
+
+    names = []
+    publicips = []
+
+    # Populate column data
+    for ip in allips:
+        instance = getassociatedinstance(ip)
+
+        if instance == "":
+            names.append("UNASSIGNED")
+        else:
+            names.append(getinstancename(instance))
+        publicips.append(getelasticpublicip(ip))
+
+    # ID
+    idcol = createdashcol("Instance", names, leftborder=True)
+
+    # Public IP
+    publicipcol = createdashcol("Public IP", publicips)
+
+    for x in range(0, len(idcol)):
+        print(idcol[x] + publicipcol[x])
 
 
 def displaydashboard():
