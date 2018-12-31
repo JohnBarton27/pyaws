@@ -16,13 +16,34 @@ def getallrdsinstances():
     return jsoninstances
 
 
+def getjson(instance):
+    if type(instance) in [dict]:
+        return instance
+
+    allinstances = getallrdsinstances()
+
+    for allinstance in allinstances:
+        if getresourceid(allinstance) == instance:
+            return allinstance
+
+        if getdbidentifier(allinstance) == instance:
+            return allinstance
+
+        if getdbname(allinstance) == instance:
+            return allinstance
+
+    raise Exception("Cannot find instance '" + instance + "'!")
+
+
 def getresourceid(instance):
     """Gets the resource ID of the RDS instance"""
+    instance = getjson(instance)
     return instance["DbiResourceId"]
 
 
 def getdbname(instance):
     """Gets the Database Name of the RDS instance"""
+    instance = getjson(instance)
     if "DBName" in instance:
         return instance["DBName"]
     else:
@@ -31,22 +52,46 @@ def getdbname(instance):
 
 def getdbidentifier(instance):
     """Gets the identifier of the RDS instance"""
+    instance = getjson(instance)
     return instance["DBInstanceIdentifier"]
 
 
 def getdballocatedsize(instance):
     """Gets the allocated size of the RDS isntance"""
+    instance = getjson(instance)
     return str(instance["AllocatedStorage"]) + " GiB"
 
 
 def getdbengine(instance):
     """Gets the engine of the RDS instance"""
+    instance = getjson(instance)
     return instance["Engine"]
 
 
 def getdbstatus(instance):
     """Gets the status of the RDS instance"""
+    instance = getjson(instance)
     return instance["DBInstanceStatus"]
+
+
+def startdb(instance):
+    """Starts an RDS database instance"""
+    instance = getjson(instance)
+    identifier = getdbidentifier(instance)
+    command = config.awsexe + " rds start-db-instance --db-instance-identifier " + identifier + " --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    return out
+
+
+def stopdb(instance):
+    """Stops an RDS database instance"""
+    instance = getjson(instance)
+    identifier = getdbidentifier(instance)
+    command = config.awsexe + " rds stop-db-instance --db-instance-identifier " + identifier + " --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    return out
 
 
 def displaydashboard():

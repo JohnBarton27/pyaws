@@ -172,7 +172,34 @@ ec2menu = {
 rdsmenu = {
     "header": "\n==== RDS ====",
     "options": {
-        1: returnToMain
+        1: {
+            "value": "Refresh dashboard",
+            "action": {
+                "function": Rds.displaydashboard,
+                "menu": "self"
+            }
+        },
+        2: {
+            "value": "Start an RDS instance",
+            "action": {
+                "function": Rds.startdb,
+                "parameters": [
+                    {"prompt": "Instance Name: "}
+                ],
+                "menu": "self"
+            },
+        },
+        3: {
+            "value": "Stop an RDS instance",
+            "action": {
+                "function": Rds.stopdb,
+                "parameters": [
+                    {"prompt": "Instance Name: "}
+                ],
+                "menu": "self"
+            },
+        },
+        4: returnToMain
     }
 }
 
