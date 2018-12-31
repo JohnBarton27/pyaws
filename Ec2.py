@@ -232,6 +232,7 @@ def displayelasticdashboard():
 
 def displaydashboard():
     """Display a dashboard with all EC2 information"""
+    import Utils
     allinstances = getallinstances()
 
     names = []
@@ -245,45 +246,13 @@ def displaydashboard():
         ipaddresses.append(getinstancepublicip(instance))
 
     # Name
-    namescol = createdashcol("Name", names, leftborder=True)
+    namescol = Utils.createdashcol("Name", names, leftborder=True)
 
     # States
-    statescol = createdashcol("State", states)
+    statescol = Utils.createdashcol("State", states)
 
     # IP Addresses
-    ipadressescol = createdashcol("IP Address", ipaddresses)
+    ipadressescol = Utils.createdashcol("IP Address", ipaddresses)
 
     for x in range(0, len(namescol)):
         print(namescol[x] + statescol[x] + ipadressescol[x])
-
-
-def createdashcol(title, data, leftborder=False):
-    """Create a data for the dashboard"""
-    rows = []
-    maxdatalen = len(max(data, key=len))
-
-    # Header
-    rows.append(pad(title, maxdatalen, leftborder=leftborder))
-
-    # Header line
-    rows.append(pad("", maxdatalen, padchar="-", leftborder=leftborder))
-
-    # Data
-    for dataval in data:
-        rows.append(pad(dataval, maxdatalen, leftborder=leftborder))
-
-    return rows
-
-
-def pad(content, maxlength, padchar=" ", leftborder=False):
-    """Pad a cell for dashboard display"""
-    if leftborder:
-        data = "|"
-    else:
-        data = ""
-    data += content
-    spacesneeded = maxlength - len(content)
-    for x in range(0, spacesneeded):
-        data += padchar
-    return data + "|"
-

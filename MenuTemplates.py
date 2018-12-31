@@ -1,5 +1,6 @@
 # Menu Templates for PyAWS
 import Ec2
+import Rds
 import Utils
 
 inputlines = "\n" \
@@ -168,6 +169,12 @@ ec2menu = {
     }
 }
 
+rdsmenu = {
+    "header": "\n==== RDS ====",
+    "options": {
+        1: returnToMain
+    }
+}
 
 mainmenu = {
     "header": "\n==== PyAWS ====\nWelcome to PyAWS! What service would you like to use?",
@@ -180,6 +187,13 @@ mainmenu = {
             }
         },
         2: {
+            "value": "RDS",
+            "action": {
+                "function": Rds.displaydashboard,
+                "menu": rdsmenu
+            }
+        },
+        3: {
             "value": "Quit PyAWS",
             "action": {
                 "function": exit
