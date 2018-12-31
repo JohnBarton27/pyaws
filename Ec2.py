@@ -68,10 +68,12 @@ def getinstanceid(instance):
 
 def getinstancename(instance):
     """Given a JSON instance, get the name"""
-    tags = instance["Tags"]
-    for tag in tags:
-        if tag["Key"] == "Name":
-            return tag["Value"]
+    if "Tags" in instance:
+        tags = instance["Tags"]
+        for tag in tags:
+            if tag["Key"] == "Name":
+                return tag["Value"]
+    return ""
 
 
 def getinstancestate(instance):
@@ -188,6 +190,19 @@ def associateip(ip, instance):
     out, err = p.communicate()
 
     print(err.decode("utf-8"))
+
+
+def disassociateip(ip):
+    """Disassociates the given Elastic IP Address from its EC2 instance"""
+    if type(ip) is str:
+        ip = getipjson(ip)
+
+    command = config.awsexe + " ec2 disassociate-address --public-ip " + getelasticpublicip(ip) + " --profile " + config.profilename
+    p = subprocess.Popen(command.split(" "), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = p.communicate()
+
+    print(err.decode("utf-8"))
+
 
 
 def releaseip(ip):
