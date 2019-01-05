@@ -6,6 +6,9 @@ import json
 
 def getinstancejson(name):
     """Given the name (or ID) of an instance, get its JSON representation"""
+    if type(name) is dict:
+        return name
+
     allinstances = getallinstances()
 
     for instance in allinstances:
