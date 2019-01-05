@@ -138,7 +138,17 @@ elasticipmenu = {
                 "menu": "self"
             }
         },
-        5: returnToMain
+        5: {
+            "value": "Disassociate an Elastic IP Address",
+            "action": {
+                "function": Ec2.disassociateip,
+                "parameters": [
+                    {"prompt": "Public IP Address to disassociate: "}
+                ],
+                "menu": "self"
+            }
+        },
+        6: returnToMain
     }
 }
 
