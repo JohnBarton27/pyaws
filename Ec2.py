@@ -78,6 +78,7 @@ def getinstancename(instance):
 
 def getinstancestate(instance):
     """Given a JSON instance, get its state"""
+    instance = getinstancejson(instance)
     return instance["State"]["Name"]
 
 

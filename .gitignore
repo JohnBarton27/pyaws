@@ -5,3 +5,4 @@ startBamboo.py
 stopBamboo.py
 crewEnvShutdown.py
 crewEnvStartup.py
+__pychace__/
